@@ -11,7 +11,14 @@
 #define BREAK_SHIFT_L 0xAA
 #define BREAK_SHIFT_R 0xB6
 
-int scanCodeToAscii(int);
+#define MAKE_CAPS_LOCK 0x3A
+#define BREAK_CAPS_LOCK 0xBA
+
+char scanCodeToAscii(int);
 void specialKey(int);
+void tab();
+void backspace();
+void enter();
+void kenter();
 
 #endif

@@ -9,3 +9,11 @@ Integrantes:
 -Bezdjian Alejandro
 
 -Gomez Jorge
+
+#Programas necesarios para la compilación y generación de imagen:
+
+-Gcc
+-Nasm
+-Grub
+-Geniso
+-Ld

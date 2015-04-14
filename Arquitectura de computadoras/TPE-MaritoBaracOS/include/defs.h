@@ -9,6 +9,14 @@
 #define byte unsigned char
 #define word short int
 #define dword int
+#define POSITION 0xb8000
+#define TAB 4
+
+#define VIDEO 0xb8000
+
+#define WHITE_TXT 0x07 // Atributo de video. Letras blancas, fondo negro
+#define BLUE_TXT 0x1F
+#define LIGHT_BLUE_TXT 0x97
 
 /* Flags para derechos de acceso de los segmentos */
 #define ACS_PRESENT     0x80            /* segmento presente en memoria */
@@ -17,10 +25,18 @@
 #define ACS_READ        0x02            /* segmento de lectura */
 #define ACS_WRITE       0x02            /* segmento de escritura */
 #define ACS_IDT         ACS_DSEG
-#define ACS_INT_386 	0x0E		/* Interrupt GATE 32 bits */
+#define ACS_INT_386 	  0x0E		        /* Interrupt GATE 32 bits */
+#define ACS_EXC_386     0x0F            /* Exception GATE 32 bits */
 #define ACS_INT         ( ACS_PRESENT | ACS_INT_386 )
+#define ACS_EXC         ( ACS_PRESENT | ACS_EXC_386 )
+#define ACS_USED        0x10            /* Interrupt programed */
 
+int cursor;
 
+#define NULL 0
+#define MAX_NOTES 60
+#define MAX_BUFFER 50
+#define EOF -1
 #define ACS_CODE        (ACS_PRESENT | ACS_CSEG | ACS_READ)
 #define ACS_DATA        (ACS_PRESENT | ACS_DSEG | ACS_WRITE)
 #define ACS_STACK       (ACS_PRESENT | ACS_DSEG | ACS_WRITE)
@@ -37,7 +53,6 @@ typedef struct {
        base_h;
 } DESCR_SEG;
 
-
 /* Descriptor de interrupcion */
 typedef struct {
   word      offset_l,
@@ -52,8 +67,6 @@ typedef struct {
   word  limit;
   dword base;
 } IDTR;
-
-     
 
 #endif
 
