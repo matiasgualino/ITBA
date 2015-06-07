@@ -102,3 +102,19 @@ f' (x:xs) = (x:xs)
 --Ejercicio 4
 filtro f list = filtroAux list (map f list)
 filtroAux (l1:l1s) (l2:l2s) = if l2 then [l1] ++ (filtroAux l1s l2s) else [] ++ (filtroAux l1s l2s)
+
+--Ejercicio 5
+takewhile :: (a -> Bool) -> [a] -> [a]
+takewhile f l = takewhilerec f False l
+--El boolean sirve como flag para saber si alguna vez cumplio con la condicion o no
+takewhilerec :: (a -> Bool) -> Bool -> [a] -> [a]
+takewhilerec f _ [] = []
+takewhilerec f False (x:xs) = if f x then x : (takewhilerec f True xs) else takewhilerec f False xs
+takewhilerec f True (x:xs) = if f x then x : (takewhilerec f True xs) else []
+
+dropwhile :: (a -> Bool) -> [a] -> [a]
+dropwhile f [] = []
+dropwhile f (x:xs) = if f x then [] else x : dropwhile f xs
+
+--Ejercicio 6
+ffreshIndex :: [Lt] -> Int
