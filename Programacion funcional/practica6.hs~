@@ -42,7 +42,6 @@ mapTip f (Tip a) = Tip (f a)
 mapTip f (Join t1 t2) = Join (mapTip f t1) (mapTip f t2)
 
 --Ejercicio 3
-data List a = Empty a | Head a (List a)
 
 --Ejercicio 4
 data Seq a = Nil | Unit a | Cat (Seq a) (Seq a)

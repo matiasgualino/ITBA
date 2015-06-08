@@ -107,7 +107,7 @@ spiderSiguientesAux s [] = []
 spiderSiguientesAux s (j:js) = (realizar s j) : spiderSiguientesAux s js
 
 data AG Spider s = STree s [AG Spider s]
-agList :: AG Spider -> [AG Spider]
+agList :: AG Spider -> [Spider]
 aglist STree s l = l
 
 arbolSpider :: Spider -> AG Spider
@@ -121,11 +121,10 @@ en cuenta que, segun las reglas del juego, este arbol
 puede ser innito. . .
 
 sumarPuntosEn :: Spider -> (Spider->Int) -> Int -> Int -> Bool
-sumarPuntosEn s f p n = sumarPuntosEnRec (spiderSiguientes s) f p (n-1) (f s)
-sumarPuntosEnRec :: [Spider] -> (Spider->Int) -> Int -> Int -> Int -> Bool
-sumarPuntosEnRec [] f p n r = False
-sumarPuntosEnRec (l:ls) f p 0 r = if (r>p) then True else 
-sumarPuntosEnRec (l:ls) f p n r = if (r>p) then True else 
+sumarPuntosEn s f p n = sumarPuntosEnRec arbolSpider f p n
+sumarPuntosEnRec :: AG Spider -> (Spider->Int) -> Int -> Int -> Bool
+sumarPuntosEnRec s f p 0 = (f s)>=p
+sumarPuntosEnRec s f p n = 
 
 que dado un spider s, una funcion de puntaje punt
 y numeros p y n, con n mayor que 0, determine si en
