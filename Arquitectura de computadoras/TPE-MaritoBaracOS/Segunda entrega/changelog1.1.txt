@@ -1,0 +1,27 @@
+Notas de la Versión 1.1:
+
+#################################################################################
+Updates:
+
+Se mejoró la impresión de la IDT, imprimiendo el offset, el selector y el acceso. También se detalla si esta la programamos nosotros o no en el sistema.
+
+Se actualizó el comando about, imprimiendo en el logo los datos del grupo.
+
+Se modificó el sonido de las excepciones por defecto, y el orden en que se ejecuta al momento de realizar una excepción.
+
+Se agregó la tabla del bloqueo de mayúsculas al teclado.
+
+Actualizado help.
+
+Agregada la impresión de una alerta si el comando a ejecutar no existe.
+
+Agregado comando exit que simula la salida del sistema operativo.
+
+#################################################################################
+Fixes:
+
+Corregidas las funciones maths y dolarcalculator, ahora validan el ingreso de datos.
+
+Corregidos errores menores en stdlib (No tomaba el caracter si el código ascii era el del número nueve en el caso de que se quiera ingresar un número).
+
+Se corrigieron errores en la función de piano.

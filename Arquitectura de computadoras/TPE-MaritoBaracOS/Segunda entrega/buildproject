@@ -1,0 +1,46 @@
+if [ ! -d ./bin ]
+then mkdir bin
+fi
+cd ./bin
+rm -rf *
+
+echo "Compilando assembler."
+nasm -f aout ../src/libasm.asm -o libasm.o
+nasm -f aout ../src/loader.asm -o loader.o
+
+
+echo "Compilando C."
+gcc -Wall -c ../src/kernel.c -o kernel.o -fno-builtin
+gcc -Wall -c ../src/drivers/video.c -o video.o -fno-builtin
+gcc -Wall -c ../src/drivers/keyboard.c -o keyboard.o -fno-builtin
+gcc -Wall -c ../src/drivers/sound.c -o sound.o -fno-builtin
+gcc -Wall -c ../src/interrupts.c -o interrupts.o -fno-builtin
+gcc -Wall -c ../src/buffer.c -o buffer.o -fno-builtin
+gcc -Wall -c ../src/stdlib.c -o stdlib.o -fno-builtin
+gcc -Wall -c ../src/shell.c -o shell.o -fno-builtin
+gcc -Wall -c ../src/panic.c -o panic.o -fno-builtin
+gcc -Wall -c ../src/libc.c -o libc.o -fno-builtin
+gcc -Wall -c ../src/maths.c -o maths.o -fno-builtin
+gcc -Wall -c ../src/piano.c -o piano.o -fno-builtin
+gcc -Wall -c ../src/exceptionsChecker.c -o exceptionsChecker.o -fno-builtin
+
+if [ -f ../img/tpe.img ]; then
+echo "Linkeditando."
+
+if ld -T ../src/link.ld -o kernel.bin loader.o kernel.o libasm.o video.o keyboard.o sound.o interrupts.o buffer.o stdlib.o shell.o panic.o libc.o maths.o piano.o exceptionsChecker.o; then
+cd ..;
+
+echo "Actualizando imagen de disco";
+sudo mount -o loop ./img/tpe.img /mnt;
+sudo cp ./bin/kernel.bin /mnt/boot;
+sudo umount /mnt;
+
+echo "Proyecto creado";
+else
+echo ""
+echo "Error al compilar el proyecto";
+echo ""
+fi
+else
+echo "No se encontró imagen de disco."
+fi
