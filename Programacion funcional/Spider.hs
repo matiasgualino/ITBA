@@ -1,33 +1,33 @@
---Mover cartas: dada una pila de origen, po, una pila de destino, pd y un numero n, si en po hay una secuencia de cartas destapadas de longitud n, ordenadas en
---forma descendente (desde n hasta el tope) y del mismo palo, y si pd esta vaca o la carta en su tope tiene el numero siguiente de la carta mas grande de la se-
---cuencia de po, entonces mueve dicha secuencia de po a pd en un solo movimiento. Si po no quedo vaca, y la carta al tope esta tapada, la destapa. Ademas,
+--Mover cartas: dada una pila de origen, po, una pila de destino, pd y un numero n, si en po hay una secuencia de cartas destapadas de longitud n, ordenadas en
+--forma descendente (desde n hasta el tope) y del mismo palo, y si pd esta vacia o la carta en su tope tiene el numero siguiente de la carta mas grande de la se-
+--cuencia de po, entonces mueve dicha secuencia de po a pd en un solo movimiento. Si po no quedo vacia, y la carta al tope esta tapada, la destapa. Ademas,
 --si en pd se forma una secuencia completa del mismo palo, del As hasta la K, dicha secuencia es removida.
---Repartir: agrega una carta al tope de cada una de las 10 pilas o hasta que el mazo se vace. Las cartas repartidas se colocan destapadas.
+--Repartir: agrega una carta al tope de cada una de las 10 pilas o hasta que el mazo se vacie. Las cartas repartidas se colocan destapadas.
 --Para representar el juego, se dispone de los tipos abstractos de datos, Numero, Palo, Carta, Pila, Jugada y Spider, con las siguientes funciones sobre ellos:
 getPalo :: Carta -> Palo
---Funcion total que retorna el palo de una carta dada.
+--Funcion total que retorna el palo de una carta dada.
 getNum :: Carta -> Numero
---Funcion total que retorna el numero de una carta dada.
+--Funcion total que retorna el numero de una carta dada.
 eqPalo :: Palo -> Palo -> Bool
---Funcion total que retorna si dos palos son iguales.
+--Funcion total que retorna si dos palos son iguales.
 eqNum :: Numero -> Numero -> Bool
---Funcion total que retorna si dos numeros son iguales.
+--Funcion total que retorna si dos numeros son iguales.
 esSiguiente :: Numero -> Numero -> Bool
---Funcion total que retorna si el primer numero es el siguiente del segundo.
+--Funcion total que retorna si el primer numero es el siguiente del segundo.
 tope :: Pila -> Maybe Carta
---Funcion total que dada una pila retorna, si existe, la carta en el tope de la misma. Si la pila esta vaca, retorna Nothing.
+--Funcion total que dada una pila retorna, si existe, la carta en el tope de la misma. Si la pila esta vacia, retorna Nothing.
 destapadas :: Pila -> [Carta]
---Funcion total que retorna la lista de cartas destapadas de la pila, siendo la cabeza de la lista retornada (si existe), el tope de la pila.
+--Funcion total que retorna la lista de cartas destapadas de la pila, siendo la cabeza de la lista retornada (si existe), el tope de la pila.
 tapadas :: Pila -> [Carta]
---Funcion total que retorna la lista de cartas tapadas de la pila, siendo la cabeza de la lista retornada (si existe), la mas cercana al tope de la pila.
+--Funcion total que retorna la lista de cartas tapadas de la pila, siendo la cabeza de la lista retornada (si existe), la mas cercana al tope de la pila.
 setDestapadas :: Pila -> [Carta] -> Pila
---Funcion total que dada dada una pila p y una lista de cartas cs, retorna una pila q que es como p, pero donde las cartas destapadas de p fueron totalmente reemplazadas por las cartas de cs.
+--Funcion total que dada dada una pila p y una lista de cartas cs, retorna una pila q que es como p, pero donde las cartas destapadas de p fueron totalmente reemplazadas por las cartas de cs.
 setTapadas :: Pila -> [Carta] -> Pila
---Funcion total que dada dada una pila p y una lista de cartas cs, retorna una pila q que es como p, pero donde las cartas tapadas de p fueron totalmente reemplazadas por las cartas de cs.
+--Funcion total que dada dada una pila p y una lista de cartas cs, retorna una pila q que es como p, pero donde las cartas tapadas de p fueron totalmente reemplazadas por las cartas de cs.
 agregar :: Carta -> Pila -> Pila
---Funcion total que agrega una carta destapada al tope de la pila dada.
+--Funcion total que agrega una carta destapada al tope de la pila dada.
 sugerir :: Spider -> [Jugada]
---Funcion total que retorna la lista de las jugadas que es posible realizar en este spider.
+--Funcion total que retorna la lista de las jugadas que es posible realizar en este spider.
 realizar :: Spider -> Jugada -> Spider
 --Funcion total que realiza una jugada.
 
@@ -101,44 +101,40 @@ repartirRec (p:ps) (c:cs) = let w = repartirRec ps cs in ((agregarl p (c:[])):fi
 
 --Ejercicio 4)
 spiderSiguientes :: Spider -> [Spider]
-spiderSiguientes s = spiderSiguientesAux s (sugerir s)
-spiderSiguientesAux :: Spider -> [Jugada] -> [Spider]
-spiderSiguientesAux s [] = []
-spiderSiguientesAux s (j:js) = (realizar s j) : spiderSiguientesAux s js
+spiderSiguientes s = map (realizar s) (sugerir s)
+--spiderSiguientes s = spiderSiguientesAux s (sugerir s)
+--spiderSiguientesAux :: Spider -> [Jugada] -> [Spider]
+--spiderSiguientesAux s [] = []
+--spiderSiguientesAux s (j:js) = (realizar s j) : spiderSiguientesAux s js
 
-data AG Spider s = STree s [AG Spider s]
-agList :: AG Spider -> [AG Spider]
-aglist STree s l = l
+data AG s = SNode s [AG s]
 
 arbolSpider :: Spider -> AG Spider
-que retorne el arbol de todos los pislbes spiders que
-pueden obtenerse a partir del spider dado, aplican-
-do una secuencia de jugadas. Tener en cuenta que
-las races de cada uno de los hijos de un nodo estan
-compuestas por los spiders obtenidos al haber reali-
-zado una jugada valida sobre el nodo. Tambien tenga
-en cuenta que, segun las reglas del juego, este arbol
-puede ser innito. . .
+arbolSpider s = SNode s (spiderNodes (spiderSiguientes s))
+spiderNodes :: [Spider] -> [AG Spider]
+spiderNodes ss = map (\x -> SNode x spiderNodes (spiderSiguientes x)) ss
+--spiderNodes [] = []
+--spiderNodes (l:ls) = (SNode l (spiderNodes (spiderSiguientes l))) : spiderNodes ls
 
 sumarPuntosEn :: Spider -> (Spider->Int) -> Int -> Int -> Bool
 sumarPuntosEn s f p n = sumarPuntosEnRec (spiderSiguientes s) f p (n-1) (f s)
 sumarPuntosEnRec :: [Spider] -> (Spider->Int) -> Int -> Int -> Int -> Bool
 sumarPuntosEnRec [] f p n r = False
-sumarPuntosEnRec (l:ls) f p 0 r = if (r>p) then True else 
-sumarPuntosEnRec (l:ls) f p n r = if (r>p) then True else 
-
-que dado un spider s, una funcion de puntaje punt
-y numeros p y n, con n mayor que 0, determine si en
-a lo sumo n jugadas, puede obtenerse un spider de
-puntaje p a partir de s.
-Sugerencia: reutilice el arbol denido en el punto
-anterior, y funciones cortarAG y estaEnAG, conve-
-nientemente denidas.
+sumarPuntosEnRec (l:ls) f p 0 r = if (r>p) then True else False
+sumarPuntosEnRec (l:ls) f p n r = if (r>p) then True else sumarPuntosEnRec ls f p (n-1) (r + f l)
 
 --Ejercicio 5)
 Identique y mencione condiciones generales
 para a y b bajo las cuales se verica la siguiente igualdad.
-Justique su respuesta con una demostracion.
+Justique su respuesta con una demostracion.
 f a (foldr f b xs) = foldr f a xs
+caso base
+f a (foldr f b []) = foldr f a []
+por definicion de foldr
+f a b = a
+
+f :: t1 -> t2 -> t2
+a :: t1
+b :: t1
 Sugerencia: para tener idea de lo que puede pasar, prue-
 be ambos lados de la igualdad con una lista [x1,x2,x3].
